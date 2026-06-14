@@ -1,0 +1,112 @@
+<!--Identitas Mahasiswa
+Nama	: Agus Sutikno
+NIM	: 052784116
+Prodi	: Sistem Informasi
+UPBJJ	: UT UPBJJ Jayapura
+Tugas	: Tugas Praktikum Mata Kuliah Pemrograman Berbasis Web
+-->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manajemen Stok - Inventory Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Vue.js v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <meta name="description" content="Halaman Manajemen Stok Bahan Ajar">
+</head>
+<body>
+
+  <!-- Seluruh konten dibungkus dalam div#app agar Vue dapat mengelola semua komponen -->
+  <div id="app" style="display: flex; height: 100vh; overflow: hidden;">
+
+    <!-- 
+      Vue Component: sidebar-component
+      Custom element — prop activePage="stok" untuk
+      menandai halaman Manajemen Stok sebagai aktif.
+    -->
+    <sidebar-component active-page="stok"></sidebar-component>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- 
+        Vue Component: topbar-component
+        Custom element — menampilkan judul halaman,
+        search box, dan tombol tambah stok baru.
+        Event @add-click di-handle oleh parent melalui $emit.
+      -->
+      <topbar-component
+        title="Manajemen Stok Bahan Ajar"
+        :show-search="true"
+        :show-add-button="true"
+        add-button-text="Tambah Stok Baru"
+        @search="handleSearch"
+        @add-click="openAddModal"
+      ></topbar-component>
+
+      <div class="content-wrapper">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Daftar Stok Bahan Ajar</h1>
+            <p class="page-subtitle">Kelola ketersediaan bahan ajar di seluruh UT-Daerah secara real-time.</p>
+          </div>
+        </div>
+
+        <!-- 
+          Vue Component: stok-table-component
+          Custom element — menampilkan tabel stok dengan filter & sort.
+          Props: stok (Array), upbjjList, kategoriList.
+          Event @edit-item di-handle oleh parent untuk membuka modal edit.
+          Komponen ini menggunakan: v-for, v-if/v-else-if/v-else, v-text,
+          v-html, v-model, v-show, computed, watcher, methods, filter.
+        -->
+        <stok-table-component
+          :stok="stok"
+          :upbjj-list="upbjjList"
+          :kategori-list="kategoriList"
+          @edit-item="openEditModal"
+          @delete-item="deleteStok"
+        ></stok-table-component>
+      </div>
+
+      <!-- 
+        Vue Component: stok-modal-component
+        Custom element — form modal untuk tambah/edit stok.
+        Props: show, editMode, formData, kategoriList, upbjjList.
+        Events: @save dan @close.
+        Komponen ini menggunakan: v-model, v-if, v-for, v-bind,
+        watcher (validasi qty), form validation, event keyboard.
+      -->
+      <stok-modal-component
+        :show="showModal"
+        :edit-mode="editMode"
+        :form-data="formData"
+        :kategori-list="kategoriList"
+        :upbjj-list="upbjjList"
+        @save="saveStok"
+        @close="closeModal"
+      ></stok-modal-component>
+    </main>
+
+  </div>
+
+  <!-- 
+    Load Vue Components terlebih dahulu.
+    stat-card-component diperlukan oleh stok-table-component (nested component).
+  -->
+  <script src="js/components/sidebar-component.js"></script>
+  <script src="js/components/topbar-component.js"></script>
+  <script src="js/components/stat-card-component.js"></script>
+  <script src="js/components/stok-table-component.js"></script>
+  <script src="js/components/stok-modal-component.js"></script>
+
+  <!-- Load Service API -->
+  <script src="js/services/api.js"></script>
+
+  <!-- Load App Instance -->
+  <script src="js/stok-app.js"></script>
+</body>
+</html>
