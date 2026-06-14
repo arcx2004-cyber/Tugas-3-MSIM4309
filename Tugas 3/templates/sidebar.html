@@ -1,0 +1,26 @@
+<!--
+  Template: sidebar-component
+  Custom Element: <sidebar-component>
+  Props: activePage (String) — halaman yang sedang aktif
+  Menggunakan: v-for (menu items), v-bind (:class active), v-text
+-->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/Logo_Universitas_Terbuka.svg" alt="Logo UT" style="width: 32px; height: auto;">
+    <span style="font-size: 1.1rem;">Universitas Terbuka</span>
+  </div>
+  <ul class="sidebar-nav">
+    <li v-for="item in menuItems" :key="item.page">
+      <a href="#" @click.prevent="$emit('navigate', item.page)" :class="{ active: activePage === item.page }">
+        <i :class="item.icon"></i> {{ item.label }}
+      </a>
+    </li>
+  </ul>
+  <div class="sidebar-footer">
+    <img src="assets/user.jpeg" alt="User Avatar" class="avatar" style="object-fit: cover;">
+    <div>
+      <div style="font-weight: 600; font-size: 0.9rem;">Admin UT</div>
+      <div style="font-size: 0.75rem; opacity: 0.7;">Administrator</div>
+    </div>
+  </div>
+</aside>

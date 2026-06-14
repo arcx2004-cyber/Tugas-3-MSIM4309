@@ -1,0 +1,156 @@
+<!--Identitas Mahasiswa
+Nama	: Agus Sutikno
+NIM	: 052784116
+Prodi	: Sistem Informasi
+UPBJJ	: UT UPBJJ Jayapura
+Tugas	: Tugas Praktikum Mata Kuliah Pemrograman Berbasis Web
+-->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemesanan - Inventory Pro</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Vue.js v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <meta name="description" content="Halaman Pemesanan Bahan Ajar Mahasiswa">
+</head>
+<body>
+
+  <!-- Seluruh konten dibungkus dalam div#app agar Vue dapat mengelola semua komponen -->
+  <div id="app" style="display: flex; height: 100vh; overflow: hidden;">
+
+    <!-- 
+      Vue Component: sidebar-component
+      Custom element — prop activePage="pemesanan" untuk
+      menandai halaman Pemesanan sebagai aktif.
+    -->
+    <sidebar-component active-page="pemesanan"></sidebar-component>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- 
+        Vue Component: topbar-component
+        Custom element — menampilkan judul dan search box.
+        Event @search untuk filter pencarian.
+      -->
+      <topbar-component
+        title="Pemesanan Bahan Ajar"
+        :show-search="true"
+        :show-add-button="false"
+        @search="handleSearch"
+      ></topbar-component>
+
+      <div class="content-wrapper">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Daftar Pemesanan Masuk</h1>
+            <p class="page-subtitle">Kelola pemesanan bahan ajar dari mahasiswa secara real-time.</p>
+          </div>
+        </div>
+
+        <!-- Ringkasan Statistik menggunakan stat-card-component -->
+        <div class="stats-container">
+          <!-- 
+            Vue Component: stat-card-component (Instance 1)
+            Menampilkan jumlah pesanan Pending.
+          -->
+          <stat-card-component
+            title="Pesanan Pending"
+            :value="totalPending"
+            subtitle="Menunggu diproses"
+            :show-trend="false"
+          ></stat-card-component>
+
+          <!-- stat-card-component Instance 2 -->
+          <stat-card-component
+            title="Sedang Diproses"
+            :value="totalDiproses"
+            subtitle="Dalam pengerjaan"
+            :show-trend="false"
+          ></stat-card-component>
+
+          <!-- stat-card-component Instance 3 -->
+          <stat-card-component
+            title="Selesai"
+            :value="totalSelesai"
+            subtitle="Pesanan terkirim"
+            :show-trend="true"
+          ></stat-card-component>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section" style="margin-bottom: 24px;">
+          <div class="form-group">
+            <label for="filterStatusPemesanan">Status Pemesanan</label>
+            <!-- v-model: two-way data binding untuk filter -->
+            <select id="filterStatusPemesanan" class="form-control" v-model="filterStatus">
+              <option value="">Semua Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Diproses">Diproses</option>
+              <option value="Selesai">Selesai</option>
+              <option value="Ditolak">Ditolak</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="justify-content: flex-end;">
+            <button class="btn btn-outline" @click="resetFilter" style="height: 38px;">
+              <i class="ph ph-arrow-counter-clockwise"></i> Reset
+            </button>
+          </div>
+
+          <!-- v-show: info total nilai pending hanya tampil jika ada pesanan pending -->
+          <div class="form-group" v-show="totalPending > 0" style="margin-left: auto; justify-content: flex-end;">
+            <label style="color: var(--status-menipis-text);">Total Nilai Pending</label>
+            <div style="font-weight: 700; color: var(--primary-color); font-size: 1.1rem;">
+              {{ totalNilaiPending | rupiah }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Daftar Pemesanan menggunakan Vue Component -->
+        <div>
+          <!-- 
+            Vue Component: pemesanan-card-component
+            Custom element — dirender untuk setiap pesanan menggunakan v-for.
+            Props: order (Object data pemesanan).
+            Events: @proses dan @tolak untuk aksi pada pesanan.
+          -->
+          <pemesanan-card-component
+            v-for="order in filteredPemesanan"
+            :key="order.noPemesanan"
+            :order="order"
+            @proses="prosesPesanan"
+            @tolak="tolakPesanan"
+          ></pemesanan-card-component>
+
+          <!-- v-if: tampilkan pesan jika data kosong -->
+          <div v-if="filteredPemesanan.length === 0" style="padding: 32px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border-color); border-radius: 8px;">
+            <i class="ph ph-shopping-cart" style="font-size: 2rem; margin-bottom: 8px; display: block;"></i>
+            Tidak ada pemesanan yang ditemukan.
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- 
+    Load Vue Components terlebih dahulu (sebelum instance Vue).
+    Urutan: komponen global → komponen halaman → app instance.
+  -->
+  <script src="js/components/sidebar-component.js"></script>
+  <script src="js/components/topbar-component.js"></script>
+  <script src="js/components/stat-card-component.js"></script>
+  <script src="js/components/pemesanan-card-component.js"></script>
+
+  <!-- Load Service API -->
+  <script src="js/services/api.js"></script>
+
+  <!-- Load App Instance -->
+  <script src="js/pemesanan-app.js"></script>
+</body>
+</html>

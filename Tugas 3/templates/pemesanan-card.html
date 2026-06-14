@@ -1,0 +1,80 @@
+<!--
+  Template: pemesanan-card-component
+  Custom Element: <pemesanan-card-component>
+  Props: order (Object) — data pemesanan tunggal
+  Events: @proses, @tolak
+  Menggunakan: v-for (items), v-if/v-else-if/v-else (status actions),
+               v-bind (:class badge), v-text, computed, methods,
+               filter (rupiah, capitalize, truncate)
+-->
+<div class="table-card" style="padding: 24px; margin-bottom: 16px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px;">
+    <div>
+      <h3 style="font-size: 1.15rem; margin-bottom: 4px;">
+        <i class="ph ph-receipt" style="margin-right: 8px;"></i>{{ order.noPemesanan }}
+      </h3>
+      <div style="font-size: 0.85rem; color: var(--text-muted);">
+        {{ order.nama | capitalize }} ({{ order.nim }}) | Tanggal: {{ order.tanggal }}
+      </div>
+    </div>
+    <span :class="badgeClass">{{ order.status | capitalize }}</span>
+  </div>
+
+  <div style="margin-bottom: 16px;">
+    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">DETAIL PESANAN</div>
+    <table class="table" style="font-size: 0.9rem;">
+      <thead>
+        <tr>
+          <th>Kode</th>
+          <th>Judul Bahan Ajar</th>
+          <th>Qty</th>
+          <th>Harga</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, idx) in order.items" :key="idx">
+          <td><strong>{{ item.kode }}</strong></td>
+          <td v-text="item.judul"></td>
+          <td>{{ item.qty }}</td>
+          <td>{{ item.harga | rupiah }}</td>
+          <td style="font-weight: 600;">{{ (item.qty * item.harga) | rupiah }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">Alamat: </span>
+      <span style="font-size: 0.9rem;">{{ order.alamat | truncate(50) }}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div style="font-weight: 700; color: var(--primary-color); font-size: 1.1rem;">{{ order.totalHarga | rupiah }}</div>
+      <!-- v-if/v-else-if/v-else: tombol aksi berdasarkan status -->
+      <div v-if="order.status === 'Pending'" style="display: flex; gap: 8px;">
+        <button class="btn btn-primary" style="padding: 6px 14px;" @click="prosesPesanan">
+          <i class="ph ph-check"></i> Proses
+        </button>
+        <button class="btn btn-outline" style="padding: 6px 14px; color: var(--status-kritis-text);" @click="tolakPesanan">
+          <i class="ph ph-x"></i> Tolak
+        </button>
+      </div>
+      <div v-else-if="order.status === 'Diproses'">
+        <span style="font-size: 0.85rem; color: var(--status-aman-text); font-weight: 600;">
+          <i class="ph ph-spinner"></i> Sedang Diproses
+        </span>
+      </div>
+      <div v-else-if="order.status === 'Ditolak'">
+        <span style="font-size: 0.85rem; color: var(--status-kritis-text); font-weight: 600;">
+          <i class="ph ph-prohibit"></i> Pesanan Ditolak
+        </span>
+      </div>
+      <div v-else>
+        <span style="font-size: 0.85rem; color: var(--status-aman-text); font-weight: 600;">
+          <i class="ph ph-check-circle"></i> Selesai
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

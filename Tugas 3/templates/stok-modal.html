@@ -1,0 +1,72 @@
+<!--
+  Template: stok-modal-component
+  Custom Element: <stok-modal-component>
+  Props: show, editMode, formData, kategoriList, upbjjList
+  Events: @save, @close
+  Menggunakan: v-if, v-model, v-for, :disabled (v-bind), @keyup.enter,
+               watcher (formData sync, validasi qty/safety negatif)
+-->
+<div class="modal-overlay" v-if="show">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>{{ editMode ? "Edit Stok" : "Tambah Stok Baru" }}</h3>
+      <button class="close-btn" @click="close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Kode Mata Kuliah</label>
+        <input type="text" class="form-control" v-model="form.kode" :disabled="editMode"
+               @keyup.enter="save">
+      </div>
+      <div class="form-group">
+        <label>Judul / Nama Mata Kuliah</label>
+        <input type="text" class="form-control" v-model="form.judul"
+               @keyup.enter="save">
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Kategori</label>
+          <select class="form-control" v-model="form.kategori">
+            <option v-for="kat in kategoriList" :value="kat">{{ kat | capitalize }}</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>UT-Daerah</label>
+          <select class="form-control" v-model="form.upbjj">
+            <option v-for="daerah in upbjjList" :value="daerah">{{ daerah }}</option>
+          </select>
+        </div>
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Lokasi Rak</label>
+          <input type="text" class="form-control" v-model="form.lokasiRak">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Harga (Rp)</label>
+          <input type="number" class="form-control" v-model.number="form.harga">
+        </div>
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <div class="form-group" style="flex: 1;">
+          <label>Qty (Stok)</label>
+          <input type="number" class="form-control" v-model.number="form.qty" min="0">
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label>Safety Stok</label>
+          <input type="number" class="form-control" v-model.number="form.safety" min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Catatan (Dukung Tag HTML)</label>
+        <input type="text" class="form-control" v-model="form.catatanHTML"
+               placeholder="Contoh: <strong>Penting</strong>"
+               @keyup.enter="save">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" @click="close">Batal</button>
+      <button class="btn btn-primary" @click="save">Simpan</button>
+    </div>
+  </div>
+</div>

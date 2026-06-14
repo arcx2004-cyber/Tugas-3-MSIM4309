@@ -1,0 +1,24 @@
+<!--
+  Template: topbar-component
+  Custom Element: <topbar-component>
+  Props: title, showSearch, showAddButton, addButtonText
+  Menggunakan: v-text, v-model, v-show, v-if, @keyup.enter, @keyup.esc
+-->
+<header class="topbar">
+  <div class="topbar-title" v-text="title"></div>
+  <div class="topbar-actions">
+    <div class="search-box" v-show="showSearch">
+      <i class="ph ph-magnifying-glass"></i>
+      <input type="text"
+             placeholder="Cari data..."
+             v-model="searchKeyword"
+             @keyup.enter="onSearchEnter"
+             @keyup.esc="onSearchEsc"
+             @input="handleSearch">
+    </div>
+    <i class="ph ph-bell" style="font-size: 1.25rem; cursor: pointer;" v-show="showSearch"></i>
+    <button class="btn btn-primary" v-if="showAddButton" @click="handleAddClick">
+      <i class="ph ph-plus"></i> {{ addButtonText }}
+    </button>
+  </div>
+</header>

@@ -1,0 +1,36 @@
+<!--
+  Template: progress-modal-component
+  Custom Element: <progress-modal-component>
+  Props: show (Boolean), doItem (Object)
+  Events: @save, @close
+  Menggunakan: v-if, v-model, @keyup.enter, form validation
+-->
+<div v-if="show" class="modal-overlay" @click.self="closeModal" @keyup.esc="closeModal" tabindex="0">
+  <div class="modal-content" style="max-width: 450px;">
+    <div class="modal-header">
+      <h2>Tambah Progress Pengiriman</h2>
+      <button class="close-btn" @click="closeModal"><i class="ph ph-x"></i></button>
+    </div>
+
+    <div class="modal-body" v-if="doItem">
+      <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-main); border-radius: 6px;">
+        <div style="font-size: 0.8rem; color: var(--text-muted);">Nomor DO</div>
+        <div style="font-weight: 600;">{{ doItem.nomorDO }}</div>
+      </div>
+      <div class="form-group">
+        <label>Keterangan Progress</label>
+        <input type="text" class="form-control" v-model="formData.keterangan"
+               @keyup.enter="saveData"
+               placeholder="Contoh: Paket telah tiba di gudang sortir kota tujuan">
+        <div v-if="errors.keterangan" class="error-message" style="color: var(--status-kritis-text); font-size: 0.8rem; margin-top: 4px;">
+          {{ errors.keterangan }}
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" @click="closeModal">Batal</button>
+      <button class="btn btn-primary" @click="saveData">Simpan Progress</button>
+    </div>
+  </div>
+</div>

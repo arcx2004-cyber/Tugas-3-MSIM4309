@@ -1,0 +1,22 @@
+<!--
+  Template: stat-card-component
+  Custom Element: <stat-card-component>
+  Props: title, value, subtitle, icon, clickable, href, bigValue, valueLabel, showTrend
+  Menggunakan: v-bind (:style), v-if, mustaches, filter uppercase
+-->
+<div class="stat-card" :style="cardStyle" @click="handleClick">
+  <div>
+    <div class="stat-title">{{ title | uppercase }}</div>
+    <div class="stat-value" style="font-size: 1.5rem;">
+      <i v-if="icon" :class="icon"></i> {{ value }}
+    </div>
+    <p v-if="subtitle" style="color: var(--text-muted); font-size: 0.85rem;">{{ subtitle }}</p>
+    <p v-if="showTrend" style="color: var(--status-aman-text); font-size: 0.85rem;">
+      <i class="ph ph-trend-up"></i> Ter-update
+    </p>
+  </div>
+  <div v-if="valueLabel" style="text-align: center; margin-right: 20px;">
+    <div style="font-size: 3.5rem; font-weight: 700; color: var(--primary-color); line-height: 1;">{{ bigValue }}</div>
+    <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 8px; font-weight: 600;">{{ valueLabel }}</div>
+  </div>
+</div>

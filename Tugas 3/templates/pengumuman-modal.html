@@ -1,0 +1,43 @@
+<!--
+  Template: pengumuman-modal-component
+  Custom Element: <pengumuman-modal-component>
+  Props: show (Boolean)
+  Events: @save, @close
+  Menggunakan: v-if, v-model, @click.self, form validation
+-->
+<div v-if="show" class="modal-overlay" @click.self="closeModal" @keyup.esc="closeModal" tabindex="0">
+  <div class="modal-content" style="max-width: 500px;">
+    <div class="modal-header">
+      <h2>Tambah Pengumuman Baru</h2>
+      <button class="close-btn" @click="closeModal"><i class="ph ph-x"></i></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Judul Pengumuman</label>
+        <input type="text" class="form-control" v-model="formData.judul" placeholder="Contoh: Jadwal Libur">
+        <div v-if="errors.judul" class="error-message" style="color: var(--status-kritis-text); font-size: 0.8rem; margin-top: 4px;">{{ errors.judul }}</div>
+      </div>
+
+      <div class="form-group">
+        <label>Tingkat Prioritas</label>
+        <select class="form-control" v-model="formData.prioritas">
+          <option value="umum">Umum (Hijau)</option>
+          <option value="info">Info (Kuning)</option>
+          <option value="penting">Penting (Merah)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Isi Pengumuman</label>
+        <textarea class="form-control" v-model="formData.isi" rows="4" placeholder="Tuliskan isi pengumuman secara detail..."></textarea>
+        <div v-if="errors.isi" class="error-message" style="color: var(--status-kritis-text); font-size: 0.8rem; margin-top: 4px;">{{ errors.isi }}</div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" @click="closeModal">Batal</button>
+      <button class="btn btn-primary" @click="saveData">Simpan Pengumuman</button>
+    </div>
+  </div>
+</div>
